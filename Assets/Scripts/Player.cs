@@ -1,32 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    public Camera cam;
-    public float speed;
+    private Paddle pad;
+    private float axis = 0;
 
-    private Dictionary<string, KeyCode> keys = new Dictionary<string, KeyCode>()
+    private void Awake()
     {
-        { "up", KeyCode.W },
-        { "down", KeyCode.S },
-    };
+        pad = GetComponent<Paddle>();
+    }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        Vector2 velocity = new Vector2();
-
-        if (Input.GetKey(keys["up"]))
+        if (axis != 0)
         {
-            velocity.y += speed;
+            pad.Move(axis);
         }
+    }
 
-        if (Input.GetKey(keys["down"]))
-        {
-            velocity.y -= speed;
-        }
-
-        transform.Translate(velocity);
+    public void GetAxis(InputAction.CallbackContext ctx)
+    {
+        axis = ctx.ReadValue<float>();
     }
 }
